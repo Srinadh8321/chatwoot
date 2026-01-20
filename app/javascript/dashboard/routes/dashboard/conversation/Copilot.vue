@@ -359,7 +359,7 @@ onBeforeUnmount(() => {
 })
 async function getConversationSummary(messages){
     try {
-        const resp= await axios.post('http://localhost:8000/ai-tools/conversation/summary',{
+        const resp= await axios.post(import.meta.env.VITE_BOT_API_URL+'/ai-tools/conversation/summary',{
             messages:messages
         });
         summaryText.value=resp.data.summary;
@@ -391,7 +391,7 @@ watch(()=>props.conversationId, (newId, oldId) => {
 watch(()=>props.panelType,(newValue, oldValue)=>{
     console.log('panel type changed to ',newValue,oldValue);
     if(newValue==='Copilot' && firstTimePanelTypeChange.value){
-       if(summaryText.value || 'allow'){
+       if(summaryText.value){
             firstTimePanelTypeChange.value=false;
             const resp= deepChatRef.value.submitUserMessage({
                 text: `Use conversation summary to assist`
