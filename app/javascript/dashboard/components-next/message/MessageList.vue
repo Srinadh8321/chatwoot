@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, computed, reactive } from 'vue';
+import { useStore } from 'vuex';
 import Message from './Message.vue';
 import { MESSAGE_TYPES } from './constants.js';
 import { useCamelCase } from 'dashboard/composables/useTransformKeys';
@@ -40,8 +41,13 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['retry']);
-
+const store = useStore();
 const allMessages = computed(() => {
+  const msgs=props.messages.filter(msg=>msg.sender?.type).map(msg => {
+    return {"role":msg.sender.type, 
+    "content":msg.content}
+  });
+  store.dispatch("messagesList/setItems", msgs);
   return useCamelCase(props.messages, { deep: true });
 });
 
